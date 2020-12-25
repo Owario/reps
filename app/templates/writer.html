@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 align="center">{{writer.name}} - все книги писателя!</h1>
+{% if not current_user.is_anonymous and current_user.is_moderator %}
+<p align="right"><a href="{{ url_for('delete_writer',writer_id=writer.id) }}">DELETE THIS WRITER</a></p>
+{% endif %}
+{%if books%}
+{% for cur_book in books %}
+{% include 'one_book.html' %}
+{% endfor %}
+{% include 'pag.html' %}
+{%else%}
+<h1 align="center"> Здесь пока нет книг o_o </h1>
+{%endif%}
+
+{% endblock %}

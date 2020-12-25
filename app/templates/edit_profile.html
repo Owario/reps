@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+<h1 align="center">Редактировать профиль</h1>
+<div style="margin:auto; width: 40%;">
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}

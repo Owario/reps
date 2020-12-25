@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+<h1 align="center">Каталог.</h1>
+<hr style="border: 2px solid rgb(223, 223, 223);" width="100%">
+<h2 align="center">Фильтровать по жанрам</h2>
+<div style="margin:auto; width: 40%;">
+    {{ wtf.quick_form(form, method="post") }}
+</div>
+<hr style="border: 2px solid rgb(223, 223, 223);" width="100%">
+{% for cur_book in books %}
+{% include 'one_book.html' %}
+{% endfor %}
+{% include 'pag.html' %}
+{% endblock %}

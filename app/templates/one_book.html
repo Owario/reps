@@ -1,0 +1,17 @@
+<div align="center">
+    <div class="card border-primary mb-3" style="width: 40%;">
+        <div class="card-body text-secondary">
+            <h3 class="card-title">{{cur_book.title}}</h3>
+            <h4 class="card-subtitle mb-2 text-muted">by {{cur_book.author.name}}</h4>
+        </div>
+
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">рейтинг: {{"%.1f" % cur_book.rating}} </li>
+            <li class="list-group-item">жанр: {{GENRES[cur_book.genre]}}</li>
+        </ul>
+        <div class="card-body text-secondary">
+            <a href="{{url_for('book', book_id=cur_book.id)}}" class="card-link">Перейти на страницу книги</a>
+        </div>
+    </div>
+</div>
+<hr style="border: 2px solid rgb(223, 223, 223);" width="100%">

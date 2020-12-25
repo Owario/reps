@@ -1,0 +1,45 @@
+<table class="table table-borderless" align="center" style="table-layout: fixed; width:40%">
+    <tr>
+        <td rowspan="2" style="width:11%"><img src="{{ comment.author.avatar(50) }}"></td>
+        <td>Смотреть страницу книги: <a href="{{url_for('book',book_id=comment.book_id)}}">{{comment.book.title}}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>{{comment.text}}</td>
+    </tr>
+    <tr>
+        <td colspan="2">{%if comment.author.ub.filter_by(book_id=comment.book_id).first() and
+            comment.author.ub.filter_by(book_id=comment.book_id).first().mark%}
+            оценка: {{comment.author.ub.filter_by(book_id=comment.book_id).first().mark}}
+            {%else%}
+            {{comment.author.login}} ещё не оценил книгу
+            {% endif %}
+        </td>
+    </tr>
+    {% if comment.author.ub.filter_by(book_id=comment.book_id).first() and
+    comment.author.ub.filter_by(book_id=comment.book_id).first().category %}
+    <tr>
+
+        <td colspan="2">
+            {% if not comment.author.ub.filter_by(book_id=comment.book_id).first() or
+            comment.author.ub.filter_by(book_id=comment.book_id).first().category == 0 %}
+
+            {% elif comment.author.ub.filter_by(book_id=comment.book_id).first().category == 1 %}
+            Пользователь прочитал книгу.
+            {% elif comment.author.ub.filter_by(book_id=comment.book_id).first().category == 2 %}
+            Пользователь читает книгу.
+            {% else %}
+            Пользователь хочет прочитать книгу
+            {% endif%}
+
+        </td>
+    </tr>
+    {% endif%}
+    <tr align="right">
+        <td colspan="2">
+            {{moment(comment.datetime).fromNow() }}
+        </td>
+    </tr>
+
+    <br>
+</table>

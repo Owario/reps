@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+
+<table align="center" width=50% style="border-spacing:  20px ">
+    <tr>
+        <td align="center" colspan="2">
+            <h1>{{book.title}}</h1>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" colspan="2">
+            <h2>by <a href="{{url_for('writer', writer_id=book.author.id)}}">{{book.author.name}}</a></h2>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <h4>Жанр: {{GENRES[book.genre]}}</h4>
+        </td>
+        <td align="center" colspan="2">
+            <h4>общий рейтинг: {{"%.1f" % book.rating}}</h4>
+        </td>
+    </tr>
+    {%if current_user.is_authenticated%}
+    <td align="center">
+        <h4>
+            {%if book.ub.filter_by(user_id=current_user.id).first() and
+            book.ub.filter_by(user_id=current_user.id).first().mark%}
+            Ваша оценка: {{book.ub.filter_by(user_id=current_user.id).first().mark}}
+            {%else%} Вы ещё не поставили оценку.
+            {%endif%}</h4>
+
+    </td>
+    <td align="center">
+        <h4>
+            {%if book.ub.filter_by(user_id=current_user.id).first() and
+            book.ub.filter_by(user_id=current_user.id).first().category%}
+            {% if book.ub.filter_by(user_id=current_user.id).first().category == 1 %}
+            Вы прочитали эту книгу.
+            {% elif book.ub.filter_by(user_id=current_user.id).first().category == 2 %}
+            Вы читаете эту книгу.
+            {% else %}
+            Вы хотите прочитать эту книгу.
+            {% endif%}
+            {% endif%}</h4>
+
+    </td>
+    </tr>
+
+    <tr>
+        <td>
+            <div style="margin:auto; width: 30%">
+                {{ wtf.quick_form(rating_form, action=url_for('add_rating',user_id=current_user.id,book_id=book.id),
+                method="post")}}
+            </div>
+        </td>
+        <td>
+            <div style="margin:auto; width: 53%">
+                {{ wtf.quick_form(category_form, action=url_for('add_category',user_id=current_user.id,book_id=book.id),
+                method="post")}}
+            </div>
+        </td>
+    </tr>
+    {%endif%}
+</table>
+{% if current_user.is_authenticated and current_user.is_moderator %}
+<p align="right"><a href="{{ url_for('delete_book',book_id=book.id) }}">DELETE THIS BOOK</a></p>
+{% endif %}
+<!-------------------------------------------------------------------------->
+
+{% if current_user.is_authenticated %}
+
+<hr style="border: 2px solid rgb(223, 223, 223);" width="40%" align="center">
+
+<div style="margin:auto; width: 40%;">
+    {{ wtf.quick_form(comment_form, action=url_for('add_comment',user_id=current_user.id,book_id=book.id),
+    method="post")}}
+
+</div>
+
+{% endif %}
+<!-------------------------------------------------------------------------->
+<hr style="border: 2px solid rgb(223, 223, 223);" width="100%">
+{% if not comments %}
+<p width="40%" align="center">
+    К этой книге никто ещё не оставил комментариев :(<br>
+    Будьте первыми!
+</p>
+{% endif %}
+
+{% for comment in comments %}
+{% include 'one_comment.html' %}
+{% endfor %}
+
+{% include 'pag.html' %}
+{% endblock %}

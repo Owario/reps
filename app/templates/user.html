@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block content %}
+<table align="center" style="table-layout: fixed; width:40%">
+    <tr>
+        <td rowspan="2"><img src="{{ user.avatar(128) }}"></td>
+        <td>
+            <h1>User: {{ user.login }}</h1>
+        </td>
+    </tr>
+    <tr>
+        <td>{% if user.last_seen %}
+            <p>Last seen on: {{ moment(user.last_seen).fromNow() }}</p>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="word-wrap:break-word">{% if user.about_me %}<p>Обо мне: {{ user.about_me }}</p>{% endif
+            %}
+        </td>
+    </tr>
+</table>
+{% if user == current_user%}
+<p align="center"><a href="{{ url_for('edit_profile') }}">Редактировать профиль</a></p>
+{%elif current_user.is_moderator%}
+<p align="center"><a href="{{ url_for('admin_edit_profile', user_id=user.id) }}">Редактировать профиль</a></p>
+{% endif %}
+
+<hr style="border: 2px solid rgb(223, 223, 223);" width="100%">
+<h1 align="center">Выбрать фильтр</h1>
+<div style="margin:auto; width: 20%;">
+    {{ wtf.quick_form(form) }}
+</div>
+<br>
+
+{% for cur_book in books %}
+{% include 'one_book.html' %}
+{% endfor %}
+
+
+{% for comment in comments %}
+{% include 'user_comment.html' %}
+{% endfor %}
+
+{% include 'pag.html' %}
+
+{% endblock %}
